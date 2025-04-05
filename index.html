@@ -29,20 +29,29 @@
 <body class="bg-gray-100 p-0">
 
   <!-- NAVBAR -->
-  <nav class="bg-gray-800 text-white px-4 py-3 flex items-center justify-between flex-wrap gap-3">
+  <nav class="bg-gray-800 text-white px-4 py-3 flex items-center justify-between flex-wrap">
     <div class="flex items-center gap-3">
       <img src="./Caveiraa.png" alt="Logo" class="h-10 w-10 object-contain">
-      <span class="text-lg font-semibold">Dutra/694</span>
+      <span class="text-lg font-semibold">694 Dutra</span>
     </div>
   </nav>
 
   <!-- FORMULÁRIO -->
   <div class="p-4 sm:p-6">
-    <div class="max-w-md mx-auto mb-6">
-      <label for="inputSD" class="block mb-2 text-lg font-semibold text-gray-800">Alterar número do SD:</label>
-      <div class="flex flex-col sm:flex-row gap-3">
-        <input id="inputSD" type="number" placeholder="Digite o novo número"
+    <div class="max-w-md mx-auto mb-6 space-y-4">
+      <div>
+        <label for="inputNomeGuerra" class="block mb-2 text-lg font-semibold text-gray-800">Nome de Guerra:</label>
+        <input id="inputNomeGuerra" type="text" placeholder="Ex: Dutra"
           class="p-3 border rounded w-full text-base">
+      </div>
+
+      <div>
+        <label for="inputSD" class="block mb-2 text-lg font-semibold text-gray-800">Número do SD:</label>
+        <input id="inputSD" type="number" placeholder="Ex: 694"
+          class="p-3 border rounded w-full text-base">
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
         <button onclick="atualizarSD()"
           class="bg-gray-700 text-white px-4 py-3 rounded hover:bg-gray-900 text-base w-full sm:w-auto">Atualizar</button>
         <button onclick="gerarPDF()"
@@ -52,7 +61,7 @@
 
     <!-- CONTEÚDO DOS CARDS -->
     <div id="pdf-content" class="max-w-4xl mx-auto grid grid-cols-1 gap-4">
-      <!-- Os 7 cards com nomes diferentes são gerados abaixo -->
+      <!-- Cards são inseridos aqui -->
     </div>
   </div>
 
@@ -82,7 +91,7 @@
               <div class="text-center p-4">
                 <h2 class="border-b border-black font-bold text-sm uppercase">${nome}</h2>
                 <div class="mt-4 space-y-1 text-sm">
-                  <p class="sd-num font-semibold">SD Nº 680</p>
+                  <p class="sd-num font-semibold">SD DUTRA Nº 694</p>
                   <p>3º PEL</p>
                   <p>1ª CIA</p>
                 </div>
@@ -99,21 +108,23 @@
     });
 
     function atualizarSD() {
-      const novoSD = document.getElementById('inputSD').value;
+      const numero = document.getElementById('inputSD').value.trim();
+      const nome = document.getElementById('inputNomeGuerra').value.trim().toUpperCase();
       const elementosSD = document.querySelectorAll('.sd-num');
+
       elementosSD.forEach(el => {
-        el.textContent = `SD Nº ${novoSD}`;
+        el.textContent = `SD ${nome} Nº ${numero}`;
       });
     }
 
     function gerarPDF() {
       const element = document.getElementById('pdf-content');
       const opt = {
-        margin:       0.2,
-        filename:     'cartoes_sd.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        margin: 0.2,
+        filename: 'etiquetas_sd.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
       html2pdf().from(element).set(opt).save();
     }
