@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Etiquetas Caveira/title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    @media print {
+      .force-desktop {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        border: 1px solid black !important;
+      }
+
+      .force-desktop > div {
+        border-right: 1px solid black !important;
+        padding: 1rem !important;
+      }
+
+      .force-desktop > div:last-child {
+        border-right: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-0">
+
+  <!-- NAVBAR -->
+  <nav class="bg-gray-800 text-white px-4 py-3 flex items-center justify-between flex-wrap gap-3">
+    <div class="flex items-center gap-3">
+      <img src="./Caveiraa.png" alt="Logo" class="h-10 w-10 object-contain">
+      <span class="text-lg font-semibold">Dutra/694</span>
+    </div>
+  </nav>
+
+  <!-- FORMULÁRIO -->
+  <div class="p-4 sm:p-6">
+    <div class="max-w-md mx-auto mb-6">
+      <label for="inputSD" class="block mb-2 text-lg font-semibold text-gray-800">Alterar número do SD:</label>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input id="inputSD" type="number" placeholder="Digite o novo número"
+          class="p-3 border rounded w-full text-base">
+        <button onclick="atualizarSD()"
+          class="bg-gray-700 text-white px-4 py-3 rounded hover:bg-gray-900 text-base w-full sm:w-auto">Atualizar</button>
+        <button onclick="gerarPDF()"
+          class="bg-black text-white px-4 py-3 rounded hover:bg-gray-700 text-base w-full sm:w-auto">Baixar PDF</button>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO DOS CARDS -->
+    <div id="pdf-content" class="max-w-4xl mx-auto grid grid-cols-1 gap-4">
+      <!-- Os 7 cards com nomes diferentes são gerados abaixo -->
+    </div>
+  </div>
+
+  <script>
+    const nomesKits = [
+      "KIT PRIMEIROS SOCORROS",
+      "KIT HIGIENE",
+      "KIT CAMUFLAGEM",
+      "KIT COSTURA/COTURNO",
+      "KIT MNT ARMAMENTO",
+      "KIT ANOTAÇÃO",
+      "KIT DIVERSOS"
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('pdf-content');
+      nomesKits.forEach(nome => {
+        container.insertAdjacentHTML('beforeend', `
+          <div class="border border-black">
+            <div class="grid grid-cols-3 divide-x divide-black force-desktop">
+              <!-- Coluna esquerda -->
+              <div class="flex items-center justify-center p-4">
+                <img src="./Caveiraa.png" alt="Logo esquerda" class="h-20 object-contain">
+              </div>
+
+              <!-- Coluna central -->
+              <div class="text-center p-4">
+                <h2 class="border-b border-black font-bold text-sm uppercase">${nome}</h2>
+                <div class="mt-4 space-y-1 text-sm">
+                  <p class="sd-num font-semibold">SD Nº 680</p>
+                  <p>3º PEL</p>
+                  <p>1ª CIA</p>
+                </div>
+              </div>
+
+              <!-- Coluna direita -->
+              <div class="flex items-center justify-center p-4">
+                <img src="./pantera.png" alt="Logo direita" class="h-20 object-contain">
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    });
+
+    function atualizarSD() {
+      const novoSD = document.getElementById('inputSD').value;
+      const elementosSD = document.querySelectorAll('.sd-num');
+      elementosSD.forEach(el => {
+        el.textContent = `SD Nº ${novoSD}`;
+      });
+    }
+
+    function gerarPDF() {
+      const element = document.getElementById('pdf-content');
+      const opt = {
+        margin:       0.2,
+        filename:     'cartoes_sd.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    }
+  </script>
+
+</body>
+</html>
